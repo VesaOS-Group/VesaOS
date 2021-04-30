@@ -213,6 +213,21 @@ namespace Cosmos.HAL
                 }
             }
         }
+        public static void Display(MemoryBlock buff)
+        {
+            // check mode
+            if (ModeID != VGAMode.Pixel320x200DB) { return; }
+
+            byte* src = (byte*)buff.Base;
+
+            for (uint i = 0; i < Width * Height; i++)
+            {
+                if (*(Buffer + i) != *(src + i))
+                {
+                    *(Buffer + i) = *(src + i);
+                }
+            }
+        }
 
         // set text-mode cursor position
         public static void SetCursorPos(ushort x, ushort y)
