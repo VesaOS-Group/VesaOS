@@ -11,7 +11,6 @@ namespace VesaOS.System.Terminal
         public static Network.NTPClient nTP = new Network.NTPClient();
         public static void Exec(string cmdline)
         {
-            new LiteralAssemblerCode("hlt");
             string[] cmd = cmdline.Split(" ");
             switch (cmd[0])
             {
@@ -82,7 +81,23 @@ namespace VesaOS.System.Terminal
                         Console.WriteLine("Directory not found!");
                     }
                     break;
-                    #endregion
+                #endregion
+                case "format":
+                    try
+                    {
+                        Console.WriteLine("Formatting...");
+                        Cosmos.System.FileSystem.VFS.VFSManager.Format(cmd[1], "fat32", true);
+                        Console.Write("Enter volume label: ");
+                        string label = Console.ReadLine();
+                        Cosmos.System.FileSystem.VFS.VFSManager.SetFileSystemLabel(cmd[1], label);
+                        Console.WriteLine("Formatted.");
+                    }
+                    catch (Exception e) { Console.WriteLine("Error: " + e.Message); }
+                    break;
+                case "":
+                    break;
+                case "crash":
+                    throw new Exception("Crash test!");
                 default:
                     if (cmd[0].EndsWith(":") && cmd[0].Length == 2)
                     {
@@ -95,9 +110,9 @@ namespace VesaOS.System.Terminal
                         {
                             Console.WriteLine("Could not change drive!");
                         }
-                        
-
+                        break;
                     }
+                    Console.WriteLine("Command not found!");
                     break;
             }
         }

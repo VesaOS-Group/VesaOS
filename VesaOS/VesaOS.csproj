@@ -48,8 +48,4 @@
       <PlugsReference Include="$(MSBuildProjectDirectory)\..\VesaOS_Plugs\bin\Debug\netcoreapp2.0\VesaOS_Plugs.dll" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Drivers\Video\VESA\" />
-    </ItemGroup>
-
 </Project>
