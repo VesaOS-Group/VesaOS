@@ -98,22 +98,31 @@ namespace VesaOS
                 return Kernel.CurrentVol + @":\" + Kernel.CurrentDir + "\\" + name;
             }
         }
+        private void Crash(Exception e)
+        {
+            Terminal.TextColor = ConsoleColor.White;
+            Terminal.BackColor = ConsoleColor.DarkBlue;
+            Terminal.ClearSlow(ConsoleColor.DarkBlue);
+            Terminal.WriteLine("Your PC has run into a problem and has been shut down to prevent damage to the system.");
+            Terminal.WriteLine("");
+            Terminal.WriteLine("Error:");
+            Terminal.WriteLine(e.ToString());
+            Terminal.WriteLine("\nPlease report this issue to the developers!\nhttps://github.com/TheRealEli310/VesaOS");
+            int y = Terminal.CursorY;
+            Terminal.SetCursorPos(0, 59); Terminal.Write("@Vesa Systems - 2021");
+
+            Terminal.SetCursorPos(0, y);
+            Terminal.WriteLine("\nPress enter to reboot, press delete to shut down: ");
+
+            while (true)
+                if (Console.ReadKey(true).Key == ConsoleKey.Enter)
+                    Sys.Power.Reboot();
+                else if (Console.ReadKey(true).Key == ConsoleKey.Delete)
+                    Sys.Power.Shutdown();
+        }
         public override string ToString()
         {
             return "VesaOS Kernel";
-        }
-        public static void Crash(Exception e)
-        {
-            Terminal.BackColor = ConsoleColor.Red;
-            Terminal.TextColor = ConsoleColor.White;
-            Terminal.Clear();
-            Terminal.WriteLine("VesaOS ran into a problem and cannot continue.");
-            Terminal.WriteLine(e.ToString());
-            Terminal.WriteLine("");
-            Terminal.WriteLine("If this is the first time you have seen this screen, try rebooting and trying what you were doing again.");
-            Terminal.WriteLine("If you did that and it is the second time you see this, try making an issue on the github page and we will try to help fix your problem.");
-            Terminal.WriteLine("If you want to fix it yourself, make a fork of the repository and edit the code to fix it. Make sure to make a pull request to the main repo afterwards.");
-            while (true);
         }
         public static void WriteBootCode()
         {

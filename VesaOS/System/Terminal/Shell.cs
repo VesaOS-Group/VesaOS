@@ -97,7 +97,8 @@ namespace VesaOS.System.Terminal
                 case "":
                     break;
                 case "crash":
-                    throw new Exception("Crash test!");
+                    throw new IntendedCrashException();
+                    
                 default:
                     if (cmd[0].EndsWith(":") && cmd[0].Length == 2)
                     {
@@ -116,5 +117,13 @@ namespace VesaOS.System.Terminal
                     break;
             }
         }
+    }
+}
+namespace VesaOS.System
+{
+    class IntendedCrashException : Exception
+    {
+        public IntendedCrashException(string additionalData) : base("IntendedCrashException: " + additionalData) { }
+        public IntendedCrashException() : base("IntendedCrashException") { }
     }
 }

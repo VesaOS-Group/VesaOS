@@ -17,6 +17,21 @@ namespace Cosmos.HAL
         public static ConsoleColor TextColor = ConsoleColor.White;
 
         // clear the screen
+        public static void Clear(ConsoleColor color)
+        {
+            VGADriverII.Clear((byte)color);
+            SetCursorPos(0, 0);
+        }
+        public static void ClearSlow(ConsoleColor color)
+        {
+            VGADriverII.Clear((byte)color);
+            SetCursorPos(0, 0);
+            for (int i = 0; i < 5400; i++)
+            {
+                Write(" ");
+            }
+            SetCursorPos(0, 0);
+        }
         public static void Clear()
         {
             VGADriverII.Clear((byte)BackColor);
