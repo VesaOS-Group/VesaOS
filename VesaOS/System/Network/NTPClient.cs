@@ -1,5 +1,6 @@
 ﻿using Cosmos.System.Network.IPv4;
 using Cosmos.System.Network.IPv4.UDP;
+using Cosmos.System.Network.IPv4.UDP.DHCP;
 using System;
 
 namespace VesaOS.System.Network
@@ -15,6 +16,17 @@ namespace VesaOS.System.Network
         /// Get network time, in UTC.
         /// </summary>
         /// <returns>network time, in UTC</returns>
+
+        public static void Init()
+        {
+            using (var xClient = new DHCPClient())
+            {
+                xClient.SendDiscoverPacket();
+
+                xClient.Close();
+            }
+        }
+
         public DateTime GetNetworkTime()
         {
             //IP address of time.windows.com
@@ -25,7 +37,7 @@ namespace VesaOS.System.Network
             //Setting the Leap Indicator, Version Number and Mode values
             ntpData[0] = 0x1B; //LI = 0 (no warning), VN = 3 (IPv4 only), Mode = 3 (Client Mode)
 
-            using (var xClient = new UdpClient(4242))
+            using (var xClient = new UdpClient(123))
             {
                 if (Debug)
                     Console.WriteLine("Connecting to " + NTPServer.ToString());
@@ -35,7 +47,7 @@ namespace VesaOS.System.Network
                 //Send data
                 xClient.Send(ntpData);
                 if (Debug)
-                    Console.WriteLine("Reciving NTP packet");
+                    Console.WriteLine("Receiving NTP packet");
 
                 // Receive data
                 var endpoint = new EndPoint(NTPServer, 123);

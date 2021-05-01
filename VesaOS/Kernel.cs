@@ -52,6 +52,8 @@ namespace VesaOS
                 {
                     Console.WriteLine("WARNING: Could not access drive 0!");
                 }
+                Console.WriteLine("Initializing network...");
+                VesaOS.System.Network.NTPClient.Init();
                 Console.WriteLine("Boot finished.");
                 pidstack.Add(0);
             }
