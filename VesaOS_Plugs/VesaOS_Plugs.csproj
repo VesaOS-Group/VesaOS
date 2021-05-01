@@ -1,11 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="IL2CPU.API" Version="0.1.0-localbuild20210326073200" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\VesaOS\VesaOS.csproj" />
   </ItemGroup>
 
 </Project>

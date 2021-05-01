@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using XSharp.Assembler;
 
 namespace VesaOS.System.Terminal
 {
@@ -10,6 +11,7 @@ namespace VesaOS.System.Terminal
         public static Network.NTPClient nTP = new Network.NTPClient();
         public static void Exec(string cmdline)
         {
+            new LiteralAssemblerCode("hlt");
             string[] cmd = cmdline.Split(" ");
             switch (cmd[0])
             {
@@ -82,6 +84,20 @@ namespace VesaOS.System.Terminal
                     break;
                     #endregion
                 default:
+                    if (cmd[0].EndsWith(":") && cmd[0].Length == 2)
+                    {
+                        try
+                        {
+                            Directory.GetFiles(cmd[0] + "\\");
+                            Kernel.CurrentVol = cmd[0][0].ToString();
+                        }
+                        catch (Exception)
+                        {
+                            Console.WriteLine("Could not change drive!");
+                        }
+                        
+
+                    }
                     break;
             }
         }

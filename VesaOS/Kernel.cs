@@ -24,7 +24,6 @@ namespace VesaOS
         public static Sys.FileSystem.CosmosVFS fs = new Sys.FileSystem.CosmosVFS();
         public static VirtualPartition ramdisk;
         private static List<Partition> mPartitions = new List<Partition>();
-        internal static Aura_OS.System.Shell.VGA.VGAConsole AConsole;
 
         protected override void BeforeRun()
         {
@@ -51,14 +50,16 @@ namespace VesaOS
                 Console.WriteLine("WARNING: Could not access drive 0!");
             }
             Console.WriteLine("Boot finished.");
+            
             //VGADriverII.Initialize(VGAMode.Pixel320x200DB);
             pidstack.Add(0);
         }
         protected override void Run()
         {
-            Console.Write(Kernel.CurrentVol + @":\" + Kernel.CurrentDir + ">");
+            Console.Write(Environment.CurrentDirectory + ">");
             System.Terminal.Shell.Exec(Console.ReadLine());
         }
+        
         public static void RunProgram(int pid)
         {
             if (pid == 0)
