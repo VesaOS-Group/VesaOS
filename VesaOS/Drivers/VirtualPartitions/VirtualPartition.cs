@@ -4,13 +4,17 @@ using System.Text;
 
 namespace VesaOS.Drivers.VirtualPartitions
 {
-    abstract class VirtualPartition
+    public class VirtualPartition
     {
-        public static byte[] data;
+        //public static byte[] data;
+        public static Dictionary<string, byte[]> files;
+        public static List<string> directoryentry = new List<string>();
         public static byte[] bootheader = new byte[256];
-        public VirtualPartition(int size)
+        public VirtualPartition()
         {
-            data = new byte[size];
+            byte[] osimage = new byte[] { };
+            files.Add("os.cza",osimage);
+            directoryentry.Add("os.cza");
         }
         public static void BootHeaderWrite(byte[] sect)
         {
@@ -20,6 +24,6 @@ namespace VesaOS.Drivers.VirtualPartitions
             }
             bootheader = sect;
         }
-
+        
     }
 }

@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30804.86
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VesaOS", "VesaOS\VesaOS.csproj", "{EF588D37-676C-489D-BD0B-908C6FB03363}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VesaOS", "VesaOS\VesaOS.csproj", "{EF588D37-676C-489D-BD0B-908C6FB03363}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VesaOS_Plugs", "VesaOS_Plugs\VesaOS_Plugs.csproj", "{F2F13E97-F296-4EDA-9075-A02DC17924B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{EF588D37-676C-489D-BD0B-908C6FB03363}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF588D37-676C-489D-BD0B-908C6FB03363}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF588D37-676C-489D-BD0B-908C6FB03363}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2F13E97-F296-4EDA-9075-A02DC17924B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2F13E97-F296-4EDA-9075-A02DC17924B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2F13E97-F296-4EDA-9075-A02DC17924B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2F13E97-F296-4EDA-9075-A02DC17924B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

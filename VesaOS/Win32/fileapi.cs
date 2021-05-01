@@ -9,11 +9,11 @@ namespace VesaOS.Win32
     {
         public static FileStream CreateFileA(string lpFileName)
         {
-            return File.Open(lpFileName, System.IO.FileMode.OpenOrCreate);
+            return File.Open(lpFileName, FileMode.OpenOrCreate);
         }
         public static FileStream CreateFileW(string lpFileName)
         {
-            return File.Open(lpFileName, System.IO.FileMode.Create);
+            return File.Open(lpFileName, FileMode.Create);
         }
     }
 }
