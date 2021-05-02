@@ -86,7 +86,7 @@ namespace VesaOS
             }
             catch (Exception e)
             {
-                if (e.InnerException is FatalException)
+                if (e is FatalException)
                 {
                     Crash(e);
                 } else
