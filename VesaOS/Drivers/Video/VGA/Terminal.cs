@@ -118,12 +118,12 @@ namespace Cosmos.HAL
                     }
                     else
                     {
-                        PCSpeaker.Beep(2000);
+                        PCSpeaker.Beep(1500, 100);
                     }
                 }
                 else if (key.Key == ConsoleKey.UpArrow)
                 {
-                    if (historyindex == History.Count) { }
+                    if (historyindex == History.Count-1) { }
                     else if (History.Count == 0) { }
                     else
                     {
@@ -146,7 +146,13 @@ namespace Cosmos.HAL
                     }
                 }
                 // enter
-                else if (key.Key == ConsoleKey.Enter) { WriteChar('\n'); History.Add(input); break; }
+                else if (key.Key == ConsoleKey.Enter) {
+                    WriteChar('\n');
+                    if (input == "") { break; }
+                    History.Remove(input);
+                    History.Add(input);
+                    break; 
+                }
             }
             return input;
         }
