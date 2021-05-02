@@ -8,6 +8,8 @@ namespace Cosmos.HAL
 {
     public static class Terminal
     {
+
+        public static List<string> History = new List<string>();
         // cursor
         public static int CursorX { get; private set; }
         public static int CursorY { get; private set; }
@@ -95,7 +97,12 @@ namespace Cosmos.HAL
         // read line of input
         public static string ReadLine()
         {
+            if (History.Count == 10)
+            {
+                History.RemoveAt(0);
+            }
             string input = "";
+            int historyindex = -1;
             while (true)
             {
                 ConsoleKeyInfo key = global::System.Console.ReadKey(true);
@@ -109,9 +116,37 @@ namespace Cosmos.HAL
                         input = input.Remove(input.Length - 1, 1);
                         Backspace();
                     }
+                    else
+                    {
+                        PCSpeaker.Beep(2000);
+                    }
+                }
+                else if (key.Key == ConsoleKey.UpArrow)
+                {
+                    if (historyindex == History.Count) { }
+                    else if (History.Count == 0) { }
+                    else
+                    {
+                        historyindex++;
+                        foreach (var _ in input) { Backspace(); }
+                        input = History[historyindex];
+                        Write(input);
+                    }
+                }
+                else if (key.Key == ConsoleKey.DownArrow)
+                {
+                    if (historyindex == 0) { }
+                    else if (History.Count == 0) { }
+                    else
+                    {
+                        historyindex--;
+                        foreach (var _ in input) { Backspace(); }
+                        input = History[historyindex];
+                        Write(input);
+                    }
                 }
                 // enter
-                else if (key.Key == ConsoleKey.Enter) { WriteChar('\n'); break; }
+                else if (key.Key == ConsoleKey.Enter) { WriteChar('\n'); History.Add(input); break; }
             }
             return input;
         }

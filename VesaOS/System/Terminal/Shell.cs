@@ -12,7 +12,7 @@ namespace VesaOS.System.Terminal
         public static void Exec(string cmdline)
         {
             string[] cmd = cmdline.Split(" ");
-            switch (cmd[0])
+            switch (cmd[0].ToLower())
             {
                 case "time":
                     Console.WriteLine(nTP.GetNetworkTime().ToString());
