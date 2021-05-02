@@ -19,6 +19,7 @@ namespace VesaOS
     public class Kernel : Sys.Kernel
     {
         public static List<int> pidstack { get; private set; }
+        public static List<string> RunningServices { get; private set; }
         public static event KernelEvent BootFinished;
         public static string CurrentDir = "";
         public static string CurrentVol = "0";
@@ -31,6 +32,7 @@ namespace VesaOS
         {
             try
             {
+                pidstack.Add(0);
                 VGADriverII.Initialize(VGAMode.Text90x60);
                 Console.WriteLine("VesaOSPE is starting...");
                 Console.WriteLine("Initializing ramdisk...");
@@ -56,8 +58,10 @@ namespace VesaOS
                 }
                 Console.WriteLine("Initializing network...");
                 VesaOS.System.Network.NTPClient.Init();
+                Console.WriteLine("Starting services...");
+                //StartService("ukms");
                 Console.WriteLine("Boot finished.");
-                pidstack.Add(0);
+                pidstack.Add(1);
             }
             catch (Exception e)
             {
@@ -70,6 +74,7 @@ namespace VesaOS
             {
                 if (!System.Graphics.WindowManager.GraphicsMode)
                 {
+                    
                     Console.Write(Environment.CurrentDirectory + ">");
                     System.Terminal.Shell.Exec(Console.ReadLine());
                 }
@@ -92,14 +97,21 @@ namespace VesaOS
             
         }
         
-        public static void RunProgram(int pid)
+        /*public static void StartService(string sname)
         {
-            if (pid == 0)
+            switch (sname.ToLower())
             {
-                throw new Exception("You cannot run the kernel!");
+                case "ukms":
+                    if (!RunningServices.Contains("ukms"))
+                    {
+                        RunningServices.Add("ukms");
+                        Core.Services.UKMS.Start();
+                    }
+                    break;
+                default:
+                    break;
             }
-
-        }
+        }*/
         /// <summary>
         /// Get the full path of a file.
         /// </summary>
