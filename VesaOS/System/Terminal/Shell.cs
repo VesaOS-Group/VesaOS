@@ -98,11 +98,13 @@ namespace VesaOS.System.Terminal
                     }
                     catch (Exception e) { Console.WriteLine("Error: " + e.Message); }
                     break;
+                case "gmode":
+                    Graphics.WindowManager.Init();
+                    break;
                 case "":
                     break;
                 case "crash":
                     throw new IntendedCrashException();
-                    
                 default:
                     if (cmd[0].EndsWith(":") && cmd[0].Length == 2)
                     {
