@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -18,6 +18,7 @@ namespace VesaOS.System.Terminal
                 case "time":
                     Console.WriteLine(nTP.GetNetworkTime().ToString());
                     break;
+                case "md":
                 case "mkdir":
                     Directory.CreateDirectory(Kernel.CurrentVol + @":\" + Kernel.CurrentDir + "\\" + cmd[1]);
                     break;
@@ -105,11 +106,13 @@ namespace VesaOS.System.Terminal
                     }
                     catch (Exception e) { Console.WriteLine("Error: " + e.Message); }
                     break;
+                case "gmode":
+                    Graphics.WindowManager.Init();
+                    break;
                 case "":
                     break;
                 case "crash":
                     throw new FatalException();
-                    
                 default:
                     if (cmd[0].EndsWith(":") && cmd[0].Length == 2)
                     {

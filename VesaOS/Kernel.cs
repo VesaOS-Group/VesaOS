@@ -68,8 +68,16 @@ namespace VesaOS
         {
             try
             {
-                Console.Write(Environment.CurrentDirectory + ">");
-                System.Terminal.Shell.Exec(Console.ReadLine());
+                if (!System.Graphics.WindowManager.GraphicsMode)
+                {
+                    Console.Write(Environment.CurrentDirectory + ">");
+                    System.Terminal.Shell.Exec(Console.ReadLine());
+                }
+                else
+                {
+                    System.Graphics.WindowManager.Run();
+                }
+                
             }
             catch (Exception e)
             {
