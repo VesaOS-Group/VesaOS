@@ -11,8 +11,20 @@ namespace VesaOS.System.Graphics
     {
         private static List<Window> windows = new List<Window>();
         private static int RunningIndex = 0;
-        public static byte[] CursorImageF = new byte[] { 0, 9, 0, 12, 0, 159, 159, 159, 159, 159, 159, 159, 159, 0, 0, 159, 159, 159, 159, 159, 159, 159, 0, 255, 0, 159, 159, 159, 159, 159, 159, 0, 255, 255, 0, 159, 159, 159, 159, 159, 0, 255, 255, 255, 0, 159, 159, 159, 159, 0, 255, 255, 255, 255, 0, 159, 159, 159, 0, 255, 255, 255, 255, 255, 0, 159, 159, 0, 255, 255, 255, 255, 255, 255, 0, 159, 0, 255, 255, 255, 255, 255, 255, 255, 0, 0, 255, 255, 255, 0, 0, 0, 0, 159, 0, 255, 0, 0, 159, 159, 159, 159, 159, 0, 0, 159, 159, 159, 159, 159, 159, 159 };
-        public static VGAImage ImgCursor = new VGAImage(9,12,CursorImageF);
+        private static readonly byte[] CursorData = new byte[6 * 10]
+        {
+            0x00, 0x9F, 0x9F, 0x9F, 0x9F, 0x9F,
+            0x00, 0x00, 0x9F, 0x9F, 0x9F, 0x9F,
+            0x00, 0xFF, 0x00, 0x9F, 0x9F, 0x9F,
+            0x00, 0xFF, 0xFF, 0x00, 0x9F, 0x9F,
+            0x00, 0xFF, 0xFF, 0xFF, 0x00, 0x9F,
+            0x00, 0xFF, 0xFF, 0xFF, 0xFF, 0x00,
+            0x00, 0xFF, 0xFF, 0xFF, 0x00, 0x9F,
+            0x00, 0xFF, 0x00, 0xFF, 0x00, 0x9F,
+            0x00, 0x00, 0x9F, 0x00, 0xFF, 0x00,
+            0x9F, 0x9F, 0x9F, 0x9F, 0x00, 0x9F,
+        };
+        public static VGAImage ImgCursor = new VGAImage(6,10,CursorData);
         public static bool GraphicsMode { get; private set; }
         public static void Run()
         {
@@ -23,7 +35,7 @@ namespace VesaOS.System.Graphics
                 windows[RunningIndex].Run();
             }
             //draw mouse
-            VGAGraphics.DrawImage((int)MouseManager.X, (int)MouseManager.Y, ImgCursor);
+            VGAGraphics.DrawImage((int)MouseManager.X, (int)MouseManager.Y, VGAColor.Magenta, ImgCursor);
             VGADriverII.Display();
         }
         public static void Init()
