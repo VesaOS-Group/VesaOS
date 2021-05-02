@@ -17,6 +17,7 @@ namespace VesaOS.System.Terminal
                 case "time":
                     Console.WriteLine(nTP.GetNetworkTime().ToString());
                     break;
+                case "md":
                 case "mkdir":
                     Directory.CreateDirectory(Kernel.CurrentVol + @":\" + Kernel.CurrentDir + "\\" + cmd[1]);
                     break;
