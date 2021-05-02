@@ -9,6 +9,8 @@ using System.Xml.Serialization;
 using System.IO;
 using System.Collections;
 using Cosmos.HAL.BlockDevice;
+using VesaOS.System.Terminal;
+using VesaOS.System;
 
 namespace VesaOS
 {
@@ -79,7 +81,13 @@ namespace VesaOS
             }
             catch (Exception e)
             {
-                Crash(e);
+                if (e.InnerException is FatalException)
+                {
+                    Crash(e);
+                } else
+                {
+                    Console.WriteLine("Error: " + e.Message);
+                }
             }
             
         }

@@ -1,7 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using VesaOS.Win32;
 using XSharp.Assembler;
 
 namespace VesaOS.System.Terminal
@@ -50,6 +51,13 @@ namespace VesaOS.System.Terminal
                     Console.WriteLine("\n");
                     Console.WriteLine("        " + $"{drive.TotalSize}" + " bytes");
                     Console.WriteLine("        " + $"{drive.AvailableFreeSpace}" + " bytes free");
+                    break;
+                case "writefile":
+                    string contents = cmdline.Substring(cmd[0].Length + cmd[1].Length + 2);
+                    fileapi.WriteFile(fileapi.GetDirectory() + cmd[1], contents);
+                    break;
+                case "cat":
+                    Console.WriteLine(fileapi.ReadFile(fileapi.GetDirectory() + cmd[1]));
                     break;
                 case "cd":
                     #region messy code here
@@ -104,7 +112,7 @@ namespace VesaOS.System.Terminal
                 case "":
                     break;
                 case "crash":
-                    throw new IntendedCrashException();
+                    throw new FatalException();
                 default:
                     if (cmd[0].EndsWith(":") && cmd[0].Length == 2)
                     {
@@ -127,9 +135,9 @@ namespace VesaOS.System.Terminal
 }
 namespace VesaOS.System
 {
-    class IntendedCrashException : Exception
+    class FatalException : Exception
     {
-        public IntendedCrashException(string additionalData) : base("IntendedCrashException: " + additionalData) { }
-        public IntendedCrashException() : base("IntendedCrashException") { }
+        public FatalException(string additionalData) : base("FatalException: " + additionalData) { }
+        public FatalException() : base("FatalException") { }
     }
 }
