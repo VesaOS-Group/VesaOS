@@ -22,6 +22,13 @@ namespace VesaOS.System.Terminal
                 case "mkdir":
                     Directory.CreateDirectory(Kernel.CurrentVol + @":\" + Kernel.CurrentDir + "\\" + cmd[1]);
                     break;
+                case "rd":
+                case "rmdir":
+                    Directory.Delete(Kernel.GetFullPath(cmd[1]),true);
+                    break;
+                case "del":
+                    fileapi.DeleteFile(Kernel.GetFullPath(cmd[1]));
+                    break;
                 case "dir":
                 case "ls":
                     string[] filePaths = Directory.GetFiles(Kernel.CurrentVol + @":\" + Kernel.CurrentDir);
