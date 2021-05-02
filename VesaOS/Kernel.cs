@@ -57,7 +57,7 @@ namespace VesaOS
                 Console.WriteLine("Initializing network...");
                 VesaOS.System.Network.NTPClient.Init();
                 Console.WriteLine("Starting services...");
-                StartService("ukms");
+                //StartService("ukms");
                 Console.WriteLine("Boot finished.");
                 pidstack.Add(1);
             }
@@ -89,7 +89,7 @@ namespace VesaOS
             
         }
         
-        public static void StartService(string sname)
+        /*public static void StartService(string sname)
         {
             switch (sname.ToLower())
             {
@@ -103,7 +103,7 @@ namespace VesaOS
                 default:
                     break;
             }
-        }
+        }*/
         /// <summary>
         /// Get the full path of a file.
         /// </summary>
