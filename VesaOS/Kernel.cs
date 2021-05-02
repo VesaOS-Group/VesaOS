@@ -34,11 +34,15 @@ namespace VesaOS
             {
                 pidstack.Add(0);
                 VGADriverII.Initialize(VGAMode.Text90x60);
-                Console.WriteLine("VesaOSPE is starting...");
+                Terminal.BackColor = ConsoleColor.DarkGreen;
+                Terminal.ClearSlow(ConsoleColor.DarkGreen);
+                Terminal.SetCursorPos(39,30);
+                Terminal.Write("VesaOS");
+                /*Console.WriteLine("VesaOSPE is starting...");
                 Console.WriteLine("Initializing ramdisk...");
-                /*ramdisk = new VirtualPartition();
+                ramdisk = new VirtualPartition();
                 BootFinished?.Invoke();*/
-                Console.WriteLine("Initializing filesystem...");
+                //Console.WriteLine("Initializing filesystem...");
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(fs);
                 for (int i = 0; i < BlockDevice.Devices.Count; i++)
                 {
@@ -47,21 +51,28 @@ namespace VesaOS
                         mPartitions.Add((Partition)BlockDevice.Devices[i]);
                     }
                 }
-                Console.WriteLine("Checking drive 0 is accessible...");
+                Terminal.ClearSlow(ConsoleColor.DarkGreen);
+                Terminal.SetCursorPos(39, 30);
+                Terminal.Write("VesaOS");
+                //Console.WriteLine("Checking drive 0 is accessible...");
                 try
                 {
                     fs.GetDirectoryListing(@"0:\");
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("WARNING: Could not access drive 0!");
+                    //Console.WriteLine("WARNING: Could not access drive 0!");
                 }
-                Console.WriteLine("Initializing network...");
+                //Console.WriteLine("Initializing network...");
                 VesaOS.System.Network.NTPClient.Init();
-                Console.WriteLine("Starting services...");
+                //Console.WriteLine("Initializing shell...");
+                Terminal.InitHistory();
+                //Console.WriteLine("Starting services...");
                 //StartService("ukms");
-                Console.WriteLine("Boot finished.");
+                //Console.WriteLine("Boot finished.");
                 pidstack.Add(1);
+                Terminal.BackColor = ConsoleColor.Black;
+                Terminal.ClearSlow(ConsoleColor.Black);
             }
             catch (Exception e)
             {

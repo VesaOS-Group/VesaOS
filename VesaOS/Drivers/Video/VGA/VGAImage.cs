@@ -25,6 +25,12 @@ namespace Cosmos.System.Graphics
         {
             this.FromFile(file);
         }
+        public VGAImage(int w, int h, byte[] data)
+        {
+            this.Width = w;
+            this.Height = h;
+            ParseData(data);
+        }
 
         // set data
         public void LoadData(int w, int h, byte[] data)

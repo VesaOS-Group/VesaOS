@@ -10,6 +10,19 @@ namespace Cosmos.HAL
     {
 
         public static List<string> History = new List<string>();
+        public static void InitHistory()
+        {
+            History.Add("");
+            History.Add("");
+            History.Add("");
+            History.Add("");
+            History.Add("");
+            History.Add("");
+            History.Add("");
+            History.Add("");
+            History.Add("");
+            History.Add("");
+        }
         // cursor
         public static int CursorX { get; private set; }
         public static int CursorY { get; private set; }
@@ -102,7 +115,7 @@ namespace Cosmos.HAL
                 History.RemoveAt(0);
             }
             string input = "";
-            int historyindex = -1;
+            int historyindex = 10;
             while (true)
             {
                 ConsoleKeyInfo key = global::System.Console.ReadKey(true);
@@ -123,19 +136,7 @@ namespace Cosmos.HAL
                 }
                 else if (key.Key == ConsoleKey.UpArrow)
                 {
-                    if (historyindex == History.Count-1) { }
-                    else if (History.Count == 0) { }
-                    else
-                    {
-                        historyindex++;
-                        foreach (var _ in input) { Backspace(); }
-                        input = History[historyindex];
-                        Write(input);
-                    }
-                }
-                else if (key.Key == ConsoleKey.DownArrow)
-                {
-                    if (historyindex == 0) { }
+                    if (historyindex <= 0) { }
                     else if (History.Count == 0) { }
                     else
                     {
@@ -145,11 +146,23 @@ namespace Cosmos.HAL
                         Write(input);
                     }
                 }
+                else if (key.Key == ConsoleKey.DownArrow)
+                {
+                    if (historyindex == History.Count - 1) { }
+                    else if (History.Count == 0) { }
+                    else
+                    {
+                        historyindex++;
+                        foreach (var _ in input) { Backspace(); }
+                        input = History[historyindex];
+                        Write(input);
+                    }
+                }
                 // enter
                 else if (key.Key == ConsoleKey.Enter) {
                     WriteChar('\n');
                     if (input == "") { break; }
-                    History.Remove(input);
+                    //History.Remove(input);
                     History.Add(input);
                     break; 
                 }
