@@ -30,9 +30,12 @@ namespace VesaOS.System.Graphics
         {
             VGAGraphics.Clear(VGAColor.Black);
             //draw current window (windows are always fullscreen for now)
-            if (!(windows.Count == 0))
+            if (windows.Count != 0)
             {
-                windows[RunningIndex].Run();
+                for (int i = 0; i < windows.Count; i++)
+                {
+                    windows[i].Run();
+                }
             }
             //draw mouse
             VGAGraphics.DrawImage((int)MouseManager.X, (int)MouseManager.Y, VGAColor.Magenta, ImgCursor);

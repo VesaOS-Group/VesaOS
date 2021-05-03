@@ -11,6 +11,8 @@ using System.Collections;
 using Cosmos.HAL.BlockDevice;
 using VesaOS.System.Terminal;
 using VesaOS.System;
+using VesaOS.System.Graphics;
+using VesaOS.System.Graphics.UI;
 
 namespace VesaOS
 {
@@ -27,6 +29,7 @@ namespace VesaOS
         public static Sys.FileSystem.CosmosVFS fs = new Sys.FileSystem.CosmosVFS();
         public static VirtualPartition ramdisk;
         private static List<Partition> mPartitions = new List<Partition>();
+        Button button = new Button();
 
         protected override void BeforeRun()
         {
@@ -73,25 +76,41 @@ namespace VesaOS
                 pidstack.Add(1);
                 Terminal.BackColor = ConsoleColor.Black;
                 Terminal.ClearSlow(ConsoleColor.Black);
+                Window window = new Window();
+                button.Width = 100;
+                button.Height = 50;
+                button.Color = Sys.Graphics.VGAColor.White;
+                button.HoverColor = Sys.Graphics.VGAColor.Gray;
+                button.ClickColor = Sys.Graphics.VGAColor.White;
+                button.X = 5;
+                button.Y = 5;
+                window.UIElements.Add(button);
+                WindowManager.ShowWindow(window);
             }
             catch (Exception e)
             {
                 Crash(e);
             }
         }
+
+        private void Button_MouseClick(object sender, EventArgs e)
+        {
+            mDebugger.Send("button click");
+        }
+
         protected override void Run()
         {
             try
             {
                 if (!System.Graphics.WindowManager.GraphicsMode)
                 {
-                    
                     Console.Write(Environment.CurrentDirectory + ">");
                     System.Terminal.Shell.Exec(Console.ReadLine());
                 }
                 else
                 {
                     System.Graphics.WindowManager.Run();
+                    button.Draw();
                 }
                 
             }
