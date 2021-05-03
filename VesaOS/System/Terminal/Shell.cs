@@ -1,9 +1,9 @@
+using Cosmos.System.Graphics;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
+using VesaOS.System.Graphics;
+using VesaOS.System.Graphics.UI;
 using VesaOS.Win32;
-using XSharp.Assembler;
 
 namespace VesaOS.System.Terminal
 {
@@ -115,6 +115,17 @@ namespace VesaOS.System.Terminal
                     break;
                 case "gmode":
                     Graphics.WindowManager.Init();
+                    Window window = new Window();
+                    Button button = new Button();
+                    button.Width = 100;
+                    button.Height = 50;
+                    button.Color = VGAColor.White;
+                    button.HoverColor = VGAColor.Gray;
+                    button.ClickColor = VGAColor.Blue;
+                    button.X = 5;
+                    button.Y = 5;
+                    window.UIElements.Add(button);
+                    WindowManager.ShowWindow(window);
                     break;
                 case "":
                     break;

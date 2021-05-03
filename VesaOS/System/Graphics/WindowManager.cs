@@ -4,6 +4,7 @@ using System.Text;
 using Cosmos.HAL;
 using Cosmos.System;
 using Cosmos.System.Graphics;
+using VesaOS.System.Graphics.UI;
 
 namespace VesaOS.System.Graphics
 {
@@ -32,10 +33,7 @@ namespace VesaOS.System.Graphics
             //draw current window (windows are always fullscreen for now)
             if (windows.Count != 0)
             {
-                for (int i = 0; i < windows.Count; i++)
-                {
-                    windows[i].Run();
-                }
+                windows[RunningIndex].Run();
             }
             //draw mouse
             VGAGraphics.DrawImage((int)MouseManager.X, (int)MouseManager.Y, VGAColor.Magenta, ImgCursor);
@@ -53,6 +51,7 @@ namespace VesaOS.System.Graphics
         public static void ShowWindow(Window w)
         {
             windows.Add(w);
+            RunningIndex = windows.Count - 1;
             windows[windows.Count - 1].Show();
         }
     }

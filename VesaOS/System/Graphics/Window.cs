@@ -1,8 +1,5 @@
-﻿using Cosmos.Core;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
-using System.Text;
 using VesaOS.System.Graphics.UI;
 
 namespace VesaOS.System.Graphics

@@ -29,7 +29,6 @@ namespace VesaOS
         public static Sys.FileSystem.CosmosVFS fs = new Sys.FileSystem.CosmosVFS();
         public static VirtualPartition ramdisk;
         private static List<Partition> mPartitions = new List<Partition>();
-        Button button = new Button();
 
         protected override void BeforeRun()
         {
@@ -76,26 +75,11 @@ namespace VesaOS
                 pidstack.Add(1);
                 Terminal.BackColor = ConsoleColor.Black;
                 Terminal.ClearSlow(ConsoleColor.Black);
-                Window window = new Window();
-                button.Width = 100;
-                button.Height = 50;
-                button.Color = Sys.Graphics.VGAColor.White;
-                button.HoverColor = Sys.Graphics.VGAColor.Gray;
-                button.ClickColor = Sys.Graphics.VGAColor.White;
-                button.X = 5;
-                button.Y = 5;
-                window.UIElements.Add(button);
-                WindowManager.ShowWindow(window);
             }
             catch (Exception e)
             {
                 Crash(e);
             }
-        }
-
-        private void Button_MouseClick(object sender, EventArgs e)
-        {
-            mDebugger.Send("button click");
         }
 
         protected override void Run()
@@ -110,7 +94,6 @@ namespace VesaOS
                 else
                 {
                     System.Graphics.WindowManager.Run();
-                    button.Draw();
                 }
                 
             }

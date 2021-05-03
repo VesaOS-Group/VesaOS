@@ -1,14 +1,12 @@
 ﻿using Cosmos.System;
 using Cosmos.System.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace VesaOS.System.Graphics.UI
 {
     public class Button : UIElement
     {
-        private bool MousePreviouslyPressed;
+        private bool MousePreviouslyPressed = false;
 
         public override void Draw()
         {
@@ -24,9 +22,10 @@ namespace VesaOS.System.Graphics.UI
                     OnMouseClick(eventArgs);
                 } else
                 {
-                    MousePreviouslyPressed = false;
                     VGAGraphics.DrawFilledRect(X, Y, Width, Height, HoverColor);
                 }
+
+                if (MouseManager.MouseState != MouseState.Left) MousePreviouslyPressed = false;
             }
             else
             {
