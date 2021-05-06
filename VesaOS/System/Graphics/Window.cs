@@ -1,8 +1,4 @@
-﻿using Cosmos.Core;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Text;
+﻿using System.Drawing;
 
 namespace VesaOS.System.Graphics
 {
@@ -35,6 +31,10 @@ namespace VesaOS.System.Graphics
             {
                 return;
             }
+        }
+        public virtual void Stop()
+        {
+
         }
     }
 }

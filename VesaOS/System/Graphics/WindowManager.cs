@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Cosmos.HAL;
 using Cosmos.System;
 using Cosmos.System.Graphics;

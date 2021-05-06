@@ -1,16 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Sys = Cosmos.System;
 using Cosmos.HAL;
 //using Console = Cosmos.HAL.Terminal;
 using VesaOS.Drivers.VirtualPartitions;
-using System.Xml.Serialization;
-using System.IO;
-using System.Collections;
-using Cosmos.HAL.BlockDevice;
-using VesaOS.System.Terminal;
 using VesaOS.System;
+using VesaOS.System.Users;
 
 namespace VesaOS
 {
@@ -20,18 +15,18 @@ namespace VesaOS
     {
         public static List<int> pidstack { get; private set; }
         public static List<string> RunningServices { get; private set; }
+        public static Core.Registry.IniFile config;
         public static event KernelEvent BootFinished;
         public static string CurrentDir = "";
         public static string CurrentVol = "0";
-        public static Dictionary<string, string> config;
         public static Sys.FileSystem.CosmosVFS fs = new Sys.FileSystem.CosmosVFS();
         public static VirtualPartition ramdisk;
-        private static List<Partition> mPartitions = new List<Partition>();
 
         protected override void BeforeRun()
         {
             try
             {
+                mDebugger.Send("VesaOS is starting!");
                 pidstack.Add(0);
                 VGADriverII.Initialize(VGAMode.Text90x60);
                 Terminal.BackColor = ConsoleColor.DarkGreen;
@@ -43,29 +38,38 @@ namespace VesaOS
                 ramdisk = new VirtualPartition();
                 BootFinished?.Invoke();*/
                 //Console.WriteLine("Initializing filesystem...");
+                mDebugger.Send("Filesystem init");
                 Sys.FileSystem.VFS.VFSManager.RegisterVFS(fs);
-                for (int i = 0; i < BlockDevice.Devices.Count; i++)
-                {
-                    if (BlockDevice.Devices[i] is Partition)
-                    {
-                        mPartitions.Add((Partition)BlockDevice.Devices[i]);
-                    }
-                }
                 Terminal.ClearSlow(ConsoleColor.DarkGreen);
                 Terminal.SetCursorPos(39, 30);
                 Terminal.Write("VesaOS");
-                //Console.WriteLine("Checking drive 0 is accessible...");
+                mDebugger.Send("Checking drive 0 is accessible...");
                 try
                 {
                     fs.GetDirectoryListing(@"0:\");
                 }
                 catch (Exception)
                 {
-                    //Console.WriteLine("WARNING: Could not access drive 0!");
+                    mDebugger.Send("WARNING: Could not access drive 0!");
                 }
-                //Console.WriteLine("Initializing network...");
-                VesaOS.System.Network.NTPClient.Init();
-                //Console.WriteLine("Initializing shell...");
+                mDebugger.Send("Reading registry...");
+                config = new Core.Registry.IniFile("0:\\config.ini");
+                if (config.GetBoolean("Boot", "NetworkEnabled"))
+                {
+                    mDebugger.Send("Initializing network...");
+                    VesaOS.System.Network.NTPClient.Init();
+                }
+                if (!config.GetBoolean("Setup","SetupCompleted"))
+                {
+                    /*System.Graphics.WindowManager.Init();
+                    System.Graphics.Window OOBE = new Apps.VesaOOBE();
+                    System.Graphics.WindowManager.ShowWindow(OOBE);
+                    while (true) { System.Graphics.WindowManager.Run(); }*/
+                    Terminal.BackColor = ConsoleColor.Black;
+                    Terminal.ClearSlow(ConsoleColor.Black);
+                    Apps.VesaOOBEText.UserAccountSetup();
+                }
+                mDebugger.Send("Initializing shell...");
                 Terminal.InitHistory();
                 //Console.WriteLine("Starting services...");
                 //StartService("ukms");
@@ -73,6 +77,17 @@ namespace VesaOS
                 pidstack.Add(1);
                 Terminal.BackColor = ConsoleColor.Black;
                 Terminal.ClearSlow(ConsoleColor.Black);
+                /*Console.Write("Username: ");
+                string un = Console.ReadLine();
+                Console.Write("Password: ");
+                string psk = Console.ReadLine();
+                while (!UserProfileSystem.Login(un,psk))
+                {
+                    Console.Write("Username: ");
+                    un = Console.ReadLine();
+                    Console.Write("Password: ");
+                    psk = Console.ReadLine();
+                }*/
             }
             catch (Exception e)
             {
@@ -168,6 +183,12 @@ namespace VesaOS
         public static void WriteBootCode()
         {
             throw new NotImplementedException();
+        }
+        public static void Reboot()
+        {
+            config.SetValue("Setup", "SetupCompleted", "true");
+            config.Push("0:\\config.ini");
+            Sys.Power.Reboot();
         }
     }
 }
