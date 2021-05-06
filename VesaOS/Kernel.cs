@@ -77,11 +77,11 @@ namespace VesaOS
                 pidstack.Add(1);
                 Terminal.BackColor = ConsoleColor.Black;
                 Terminal.ClearSlow(ConsoleColor.Black);
-                Console.Write("Username: ");
+                /*Console.Write("Username: ");
                 string un = Console.ReadLine();
                 Console.Write("Password: ");
                 string psk = Console.ReadLine();
-                /*while (!UserProfileSystem.Login(un,psk))
+                while (!UserProfileSystem.Login(un,psk))
                 {
                     Console.Write("Username: ");
                     un = Console.ReadLine();
