@@ -58,7 +58,7 @@ namespace VesaOS.System.Terminal
                     break;
                 case "writefile":
                     string contents = cmdline.Substring(cmd[0].Length + cmd[1].Length + 2);
-                    fileapi.WriteFile(fileapi.GetDirectory() + cmd[1], contents);
+                    fileapi.WriteFile(fileapi.GetDirectory() + "\\" + cmd[1], contents);
                     break;
                 case "cat":
                     Console.WriteLine(fileapi.ReadFile(fileapi.GetDirectory() + cmd[1]));
@@ -105,6 +105,10 @@ namespace VesaOS.System.Terminal
                         Cosmos.System.FileSystem.VFS.VFSManager.Format(cmd[1], "fat32", true);
                         Console.Write("Enter volume label: ");
                         string label = Console.ReadLine();
+                        if (string.IsNullOrWhiteSpace(label))
+                        {
+                            label = "Local Disk";
+                        }
                         Cosmos.System.FileSystem.VFS.VFSManager.SetFileSystemLabel(cmd[1], label);
                         Console.WriteLine("Formatted.");
                     }

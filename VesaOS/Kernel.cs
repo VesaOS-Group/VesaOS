@@ -180,10 +180,6 @@ namespace VesaOS
         {
             return "VesaOS Kernel";
         }
-        public static void WriteBootCode()
-        {
-            throw new NotImplementedException();
-        }
         public static void Reboot()
         {
             config.SetValue("Setup", "SetupCompleted", "true");
