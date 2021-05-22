@@ -1,3 +1,4 @@
+using ICSharpCode.SharpZipLib.Tar;
 using System;
 using System.IO;
 using VesaOS.Win32;
@@ -177,6 +178,9 @@ namespace VesaOS.System.Terminal
                     break;
                 case "crash":
                     throw new FatalException();
+                case "untar":
+                    
+                    break;
                 default:
                     if (Kernel.BootMode == 0 || Kernel.BootMode == 3)
                     {
