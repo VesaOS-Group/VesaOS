@@ -21,14 +21,58 @@ namespace VesaOS
         public static string CurrentVol = "0";
         public static Sys.FileSystem.CosmosVFS fs = new Sys.FileSystem.CosmosVFS();
         public static VirtualPartition ramdisk;
+        public static int BootMode = 0;
 
         protected override void BeforeRun()
         {
             try
             {
+                VGADriverII.Initialize(VGAMode.Text90x60);
+                Console.WriteLine("Hold shift for boot options...");
+                for (int i = 0; i < 1000000; i++)
+                {
+                    if (true)
+                    {
+
+                    }
+                }
+                Console.Clear();
+                if (Sys.KeyboardManager.ShiftPressed)
+                {
+                    while (true)
+                    {
+                        Console.WriteLine("VesaOS Boot Menu");
+                        Console.WriteLine("1) Boot normally");
+                        Console.WriteLine("2) Safe mode");
+                        Console.WriteLine("3) Safe mode with networking");
+                        Console.WriteLine("4) Safe mode with filesystem");
+                        Console.WriteLine();
+                        Console.Write("Select one: ");
+                        ConsoleKeyInfo kcki = Console.ReadKey();
+                        string k = kcki.KeyChar.ToString();
+                        if (k == "1")
+                        {
+                            break;
+                        }
+                        if (k == "2")
+                        {
+                            BootMode = 1;
+                            break;
+                        }
+                        if (k == "3")
+                        {
+                            BootMode = 2;
+                            break;
+                        }
+                        if (k == "4")
+                        {
+                            BootMode = 3;
+                            break;
+                        }
+                    }
+                }
                 mDebugger.Send("VesaOS is starting!");
                 pidstack.Add(0);
-                VGADriverII.Initialize(VGAMode.Text90x60);
                 Terminal.BackColor = ConsoleColor.DarkGreen;
                 Terminal.ClearSlow(ConsoleColor.DarkGreen);
                 Terminal.SetCursorPos(39,30);
@@ -38,36 +82,49 @@ namespace VesaOS
                 ramdisk = new VirtualPartition();
                 BootFinished?.Invoke();*/
                 //Console.WriteLine("Initializing filesystem...");
-                mDebugger.Send("Filesystem init");
-                Sys.FileSystem.VFS.VFSManager.RegisterVFS(fs);
-                Terminal.ClearSlow(ConsoleColor.DarkGreen);
-                Terminal.SetCursorPos(39, 30);
-                Terminal.Write("VesaOS");
-                mDebugger.Send("Checking drive 0 is accessible...");
-                try
+                if (BootMode == 0 || BootMode == 3)
                 {
-                    fs.GetDirectoryListing(@"0:\");
+                    mDebugger.Send("Filesystem init");
+                    Sys.FileSystem.VFS.VFSManager.RegisterVFS(fs);
+                    Terminal.ClearSlow(ConsoleColor.DarkGreen);
+                    Terminal.SetCursorPos(39, 30);
+                    Terminal.Write("VesaOS");
+                    mDebugger.Send("Checking drive 0 is accessible...");
+                    try
+                    {
+                        fs.GetDirectoryListing(@"0:\");
+                    }
+                    catch (Exception)
+                    {
+                        mDebugger.Send("WARNING: Could not access drive 0!");
+                    }
+                    mDebugger.Send("Reading registry...");
+                    //config = new Core.Registry.IniFile("0:\\config.ini");
                 }
-                catch (Exception)
+                if (BootMode == 0)
                 {
-                    mDebugger.Send("WARNING: Could not access drive 0!");
+                    if (true) //config.GetBoolean("Boot", "NetworkEnabled")
+                    {
+                        mDebugger.Send("Initializing network...");
+                        VesaOS.System.Network.NTPClient.Init();
+                    }
                 }
-                mDebugger.Send("Reading registry...");
-                config = new Core.Registry.IniFile("0:\\config.ini");
-                if (config.GetBoolean("Boot", "NetworkEnabled"))
+                if (BootMode == 2)
                 {
-                    mDebugger.Send("Initializing network...");
                     VesaOS.System.Network.NTPClient.Init();
                 }
-                if (!config.GetBoolean("Setup","SetupCompleted"))
+                if (BootMode == 0 || BootMode == 3)
                 {
-                    /*System.Graphics.WindowManager.Init();
-                    System.Graphics.Window OOBE = new Apps.VesaOOBE();
-                    System.Graphics.WindowManager.ShowWindow(OOBE);
-                    while (true) { System.Graphics.WindowManager.Run(); }*/
-                    Terminal.BackColor = ConsoleColor.Black;
-                    Terminal.ClearSlow(ConsoleColor.Black);
-                    Apps.VesaOOBEText.UserAccountSetup();
+                    if (!true) //config.GetBoolean("Setup", "SetupCompleted")
+                    {
+                        /*System.Graphics.WindowManager.Init();
+                        System.Graphics.Window OOBE = new Apps.VesaOOBE();
+                        System.Graphics.WindowManager.ShowWindow(OOBE);
+                        while (true) { System.Graphics.WindowManager.Run(); }*/
+                        Terminal.BackColor = ConsoleColor.Black;
+                        Terminal.ClearSlow(ConsoleColor.Black);
+                        Apps.VesaOOBEText.UserAccountSetup();
+                    }
                 }
                 mDebugger.Send("Initializing shell...");
                 Terminal.InitHistory();
@@ -186,5 +243,15 @@ namespace VesaOS
             config.Push("0:\\config.ini");
             Sys.Power.Reboot();
         }
+        public static void RunProgram()
+        {
+
+        }
+    }
+    enum ProgramType
+    {
+        WindmillStandard = 0,
+        WindmillVesaOS = 1,
+        DotNet = 2,
     }
 }

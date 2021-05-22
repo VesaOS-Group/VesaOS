@@ -8,7 +8,10 @@ namespace VesaOS.Apps.CPUEMU
     {
         public static void BootDisk()
         {
-
+            if (HardDisk.GetByte(511) == 0xAA && HardDisk.GetByte(512) == 0x55)
+            {
+                Console.WriteLine("Disk is not bootable!");
+            }
         }
     }
 }

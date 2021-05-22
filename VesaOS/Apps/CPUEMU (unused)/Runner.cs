@@ -25,6 +25,11 @@ namespace VesaOS.Apps.CPUEMU
         public static void Reset()
         {
             ram = new byte[524288];
+            BIOS.BootDisk();
+        }
+        public static void Halt()
+        {
+            Console.WriteLine("CPU Halted.");
         }
     }
 }

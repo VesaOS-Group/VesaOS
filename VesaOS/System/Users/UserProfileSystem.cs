@@ -1,6 +1,6 @@
 ﻿namespace VesaOS.System.Users
 {
-    class UserProfileSystem
+    public class UserProfileSystem
     {
         public static string CurrentUser { get; private set; }
         public static UserPermLevel CurrentPermLevel { get; private set; }
@@ -31,7 +31,7 @@
             Kernel.config.SetValue("UserPerms", un, "2");
         }
     }
-    enum UserPermLevel
+    public enum UserPermLevel
     {
         Guest = 0,
         User = 1,

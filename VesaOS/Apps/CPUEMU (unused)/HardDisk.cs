@@ -14,5 +14,14 @@ namespace VesaOS.Apps.CPUEMU
             int hdaddr = (int)(addr % 524288);
             return hddbuf[hdaddr];
         }
+        public static void WriteByte(ulong addr,byte val)
+        {
+            ulong hddfilei = addr / 524288;
+            string hddfile = "hdd-" + hddfilei.ToString() + ".hdd";
+            hddbuf = File.ReadAllBytes(Kernel.GetFullPath(hddfile));
+            int hdaddr = (int)(addr % 524288);
+            hddbuf[hdaddr] = val;
+            File.WriteAllBytes(hddfile,hddbuf);
+        }
     }
 }
