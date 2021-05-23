@@ -11,12 +11,14 @@ namespace VesaOS
 {
     public delegate void KernelEvent();
     
-    public class Kernel : Sys.Kernel
+    public unsafe class Kernel : Sys.Kernel
     {
         public static List<int> pidstack { get; private set; }
         public static List<string> RunningServices { get; private set; }
         public static Core.Registry.IniFile config;
         public static event KernelEvent BootFinished;
+        private static byte* ProcessMemory;
+        private static int ProcessMemorySize;
         public static string CurrentDir = "";
         public static string CurrentVol = "0";
         public static Sys.FileSystem.CosmosVFS fs = new Sys.FileSystem.CosmosVFS();
@@ -72,11 +74,15 @@ namespace VesaOS
                     }
                 }
                 mDebugger.Send("VesaOS is starting!");
+                Cosmos.Core.Memory.Heap.Init();
+                ProcessMemory = Cosmos.Core.Memory.Heap.Alloc(((Cosmos.Core.CPU.GetAmountOfRAM() * 1024) * 1024) / 2);
+                ProcessMemorySize = (int)(Cosmos.Core.CPU.GetAmountOfRAM() * 1024 * 1024 / 2);
                 pidstack.Add(0);
                 Terminal.BackColor = ConsoleColor.DarkGreen;
                 Terminal.ClearSlow(ConsoleColor.DarkGreen);
                 Terminal.SetCursorPos(39,30);
                 Terminal.Write("VesaOS");
+                
                 /*Console.WriteLine("VesaOSPE is starting...");
                 Console.WriteLine("Initializing ramdisk...");
                 ramdisk = new VirtualPartition();
@@ -239,9 +245,17 @@ namespace VesaOS
         }
         public static void Reboot()
         {
-            config.SetValue("Setup", "SetupCompleted", "true");
-            config.Push("0:\\config.ini");
+            //Free the ProcessMemory
+            Cosmos.Core.Memory.Heap.Free(ProcessMemory);
+            //Reset CPU
             Sys.Power.Reboot();
+        }
+        public static void Shutdown()
+        {
+            //Free the ProcessMemory
+            Cosmos.Core.Memory.Heap.Free(ProcessMemory);
+            //Shutdown with ACPI
+            Sys.Power.Shutdown();
         }
         public static void RunProgram()
         {

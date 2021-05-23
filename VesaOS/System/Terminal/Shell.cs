@@ -1,4 +1,4 @@
-using ICSharpCode.SharpZipLib.Tar;
+using Cosmos.HAL;
 using System;
 using System.IO;
 using VesaOS.Win32;
@@ -13,7 +13,7 @@ namespace VesaOS.System.Terminal
             string[] cmd = cmdline.Split(" ");
             switch (cmd[0].ToLower())
             {
-                case "time":
+                case "timesync":
                     if (Kernel.BootMode == 0 || Kernel.BootMode == 2)
                     {
                         Console.WriteLine(nTP.GetNetworkTime().ToString());
@@ -178,8 +178,14 @@ namespace VesaOS.System.Terminal
                     break;
                 case "crash":
                     throw new FatalException();
-                case "untar":
-                    
+                case "update":
+                    //i need to put this in here - eli310
+                    break;
+                case "date":
+                    Console.WriteLine(RTC.DayOfTheMonth.ToString()+"/"+RTC.Month.ToString()+"/"+RTC.Century.ToString()+RTC.Year.ToString());
+                    break;
+                case "time":
+                    Console.WriteLine(RTC.Hour.ToString() + ":" + RTC.Minute.ToString());
                     break;
                 default:
                     if (Kernel.BootMode == 0 || Kernel.BootMode == 3)

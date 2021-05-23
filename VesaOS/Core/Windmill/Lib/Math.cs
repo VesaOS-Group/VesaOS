@@ -64,7 +64,7 @@ namespace VesaOS.Core.Windmill.Lib
                 Array.Reverse(rawVal1); Array.Reverse(rawVal2);
             }
             
-            int val1 = BitConverter.ToInt32(rawVal1); int val2 = BitConverter.ToInt32(rawVal2);
+            int val1 = BitConverter.ToInt32(rawVal1,0); int val2 = BitConverter.ToInt32(rawVal2,0);
             switch (op)
             {
                 case 0x00:

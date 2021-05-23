@@ -40,7 +40,7 @@ namespace VesaOS.Core.Windmill.Lib
 
             if (BitConverter.IsLittleEndian)
                 Array.Reverse(rawVal);
-            int val1 = BitConverter.ToInt32(rawVal);
+            int val1 = BitConverter.ToInt32(rawVal,0);
 
             char[] charArr = val1.ToString().ToCharArray();
             for (int i = 0; i < charArr.Length; i++)
