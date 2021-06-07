@@ -1,7 +1,8 @@
-using Cosmos.System.Graphics;
+using Cosmos.HAL;
 using System;
 using System.IO;
-using VesaOS.System.Graphics;
+using VesaOS.System.Network.HTTP;
+using Cosmos.System.Graphics;
 using VesaOS.System.Graphics.UI;
 using VesaOS.Win32;
 
@@ -15,53 +16,95 @@ namespace VesaOS.System.Terminal
             string[] cmd = cmdline.Split(" ");
             switch (cmd[0].ToLower())
             {
-                case "time":
-                    Console.WriteLine(nTP.GetNetworkTime().ToString());
-                    break;
-                case "md":
-                case "mkdir":
-                    Directory.CreateDirectory(Kernel.CurrentVol + @":\" + Kernel.CurrentDir + "\\" + cmd[1]);
-                    break;
-                case "rd":
-                case "rmdir":
-                    Directory.Delete(Kernel.GetFullPath(cmd[1]),true);
-                    break;
-                case "del":
-                    fileapi.DeleteFile(Kernel.GetFullPath(cmd[1]));
-                    break;
-                case "dir":
-                case "ls":
-                    string[] filePaths = Directory.GetFiles(Kernel.CurrentVol + @":\" + Kernel.CurrentDir);
-                    var drive = new DriveInfo(Kernel.CurrentVol);
-                    Console.WriteLine("Volume in drive 0 is " + $"{drive.VolumeLabel}");
-                    Console.WriteLine("Directory of " + Kernel.CurrentVol + @":\" + Kernel.CurrentDir);
-                    Console.WriteLine("\n");
-                    if (filePaths.Length == 0 && Directory.GetDirectories(Kernel.CurrentVol + @":\" + Kernel.CurrentDir).Length == 0)
+                case "timesync":
+                    if (Kernel.BootMode == 0 || Kernel.BootMode == 2)
                     {
-                        Console.WriteLine("File Not Found");
+                        Console.WriteLine(nTP.GetNetworkTime().ToString());
                     }
                     else
                     {
-                        for (int i = 0; i < filePaths.Length; ++i)
-                        {
-                            string path = filePaths[i];
-                            Console.WriteLine(Path.GetFileName(path));
-                        }
-                        foreach (var d in Directory.GetDirectories(Kernel.CurrentVol + @":\" + Kernel.CurrentDir))
-                        {
-                            var dir = new DirectoryInfo(d);
-                            var dirName = dir.Name;
-
-                            Console.WriteLine(dirName + " <DIR>");
-                        }
+                        Console.WriteLine("Networking is disabled!");
                     }
-                    Console.WriteLine("\n");
-                    Console.WriteLine("        " + $"{drive.TotalSize}" + " bytes");
-                    Console.WriteLine("        " + $"{drive.AvailableFreeSpace}" + " bytes free");
+                    break;
+                case "md":
+                case "mkdir":
+                    if (Kernel.BootMode == 0 || Kernel.BootMode == 3)
+                    {
+                        Directory.CreateDirectory(Kernel.CurrentVol + @":\" + Kernel.CurrentDir + "\\" + cmd[1]);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Filesystem not enabled!");
+                    }
+                    break;
+                case "rd":
+                case "rmdir":
+                    if (Kernel.BootMode == 0 || Kernel.BootMode == 3)
+                    {
+                        Directory.Delete(Kernel.GetFullPath(cmd[1]), true);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Filesystem not enabled!");
+                    }
+                    break;
+                case "del":
+                    if (Kernel.BootMode == 0 || Kernel.BootMode == 3)
+                    {
+                        fileapi.DeleteFile(Kernel.GetFullPath(cmd[1]));
+                    }
+                    else
+                    {
+                        Console.WriteLine("Filesystem not enabled!");
+                    }
+                    break;
+                case "dir":
+                case "ls":
+                    if (Kernel.BootMode == 0 || Kernel.BootMode == 3)
+                    {
+                        string[] filePaths = Directory.GetFiles(Kernel.CurrentVol + @":\" + Kernel.CurrentDir);
+                        var drive = new DriveInfo(Kernel.CurrentVol);
+                        Console.WriteLine("Volume in drive 0 is " + $"{drive.VolumeLabel}");
+                        Console.WriteLine("Directory of " + Kernel.CurrentVol + @":\" + Kernel.CurrentDir);
+                        Console.WriteLine("\n");
+                        if (filePaths.Length == 0 && Directory.GetDirectories(Kernel.CurrentVol + @":\" + Kernel.CurrentDir).Length == 0)
+                        {
+                            Console.WriteLine("File Not Found");
+                        }
+                        else
+                        {
+                            for (int i = 0; i < filePaths.Length; ++i)
+                            {
+                                string path = filePaths[i];
+                                Console.WriteLine(Path.GetFileName(path));
+                            }
+                            foreach (var d in Directory.GetDirectories(Kernel.CurrentVol + @":\" + Kernel.CurrentDir))
+                            {
+                                var dir = new DirectoryInfo(d);
+                                var dirName = dir.Name;
+
+                                Console.WriteLine(dirName + " <DIR>");
+                            }
+                        }
+                        Console.WriteLine("\n");
+                        Console.WriteLine("        " + $"{drive.TotalSize}" + " bytes");
+                        Console.WriteLine("        " + $"{drive.AvailableFreeSpace}" + " bytes free");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Filesystem not enabled!");
+                    }
                     break;
                 case "writefile":
-                    string contents = cmdline.Substring(cmd[0].Length + cmd[1].Length + 2);
-                    fileapi.WriteFile(fileapi.GetDirectory() + cmd[1], contents);
+                    if (Kernel.BootMode == 0 || Kernel.BootMode == 3)
+                    {
+                        string contents = cmdline.Substring(cmd[0].Length + cmd[1].Length + 2);
+                        fileapi.WriteFile(fileapi.GetDirectory() + "\\" + cmd[1], contents);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Filesystem not enabled!");
+                    }
                     break;
                 case "cat":
                     Console.WriteLine(fileapi.ReadFile(fileapi.GetDirectory() + cmd[1]));
@@ -102,48 +145,82 @@ namespace VesaOS.System.Terminal
                     break;
                 #endregion
                 case "format":
-                    try
+                    if (Kernel.BootMode == 0 || Kernel.BootMode == 3)
                     {
-                        Console.WriteLine("Formatting...");
-                        Cosmos.System.FileSystem.VFS.VFSManager.Format(cmd[1], "fat32", true);
-                        Console.Write("Enter volume label: ");
-                        string label = Console.ReadLine();
-                        Cosmos.System.FileSystem.VFS.VFSManager.SetFileSystemLabel(cmd[1], label);
-                        Console.WriteLine("Formatted.");
+                        try
+                        {
+                            Console.WriteLine("Formatting...");
+                            Cosmos.System.FileSystem.VFS.VFSManager.Format(cmd[1], "fat32", true);
+                            Console.Write("Enter volume label: ");
+                            string label = Console.ReadLine();
+                            if (string.IsNullOrWhiteSpace(label))
+                            {
+                                label = "Local Disk";
+                            }
+                            Cosmos.System.FileSystem.VFS.VFSManager.SetFileSystemLabel(cmd[1], label);
+                            Console.WriteLine("Formatted.");
+                        }
+                        catch (Exception e) { Console.WriteLine("Error: " + e.Message); }
                     }
-                    catch (Exception e) { Console.WriteLine("Error: " + e.Message); }
+                    else
+                    {
+                        Console.WriteLine("Filesystem not enabled!");
+                    }
                     break;
                 case "gmode":
-                    Graphics.WindowManager.Init();
-                    Window window = new Window();
-                    Button button = new Button();
-                    button.Width = 100;
-                    button.Height = 50;
-                    button.Color = VGAColor.White;
-                    button.HoverColor = VGAColor.Gray;
-                    button.ClickColor = VGAColor.Blue;
-                    button.X = 5;
-                    button.Y = 5;
-                    window.UIElements.Add(button);
-                    WindowManager.ShowWindow(window);
+                    if (Kernel.BootMode == 0)
+                    {
+                        Graphics.WindowManager.Init();
+                        Graphics.WindowManager.Init();
+                        Window window = new Window();
+                        Button button = new Button();
+                        button.Width = 100;
+                        button.Height = 50;
+                        button.Color = VGAColor.White;
+                        button.HoverColor = VGAColor.Gray;
+                        button.ClickColor = VGAColor.Blue;
+                        button.X = 5;
+                        button.Y = 5;
+                        window.UIElements.Add(button);
+                        WindowManager.ShowWindow(window);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Graphics mode not supported!");
+                    }
                     break;
                 case "":
                     break;
                 case "crash":
                     throw new FatalException();
+                case "update":
+                    //i need to put this in here - eli310
+                    break;
+                case "date":
+                    Console.WriteLine(RTC.DayOfTheMonth.ToString()+"/"+RTC.Month.ToString()+"/"+RTC.Century.ToString()+RTC.Year.ToString());
+                    break;
+                case "time":
+                    Console.WriteLine(RTC.Hour.ToString() + ":" + RTC.Minute.ToString());
+                    break;
+                case "wget":
+                    Console.WriteLine(HTTPClient.Get(cmd[1]));
+                    break;
                 default:
-                    if (cmd[0].EndsWith(":") && cmd[0].Length == 2)
+                    if (Kernel.BootMode == 0 || Kernel.BootMode == 3)
                     {
-                        try
+                        if (cmd[0].EndsWith(":") && cmd[0].Length == 2)
                         {
-                            Directory.GetFiles(cmd[0] + "\\");
-                            Kernel.CurrentVol = cmd[0][0].ToString();
+                            try
+                            {
+                                Directory.GetFiles(cmd[0] + "\\");
+                                Kernel.CurrentVol = cmd[0][0].ToString();
+                            }
+                            catch (Exception)
+                            {
+                                Console.WriteLine("Could not change drive!");
+                            }
+                            break;
                         }
-                        catch (Exception)
-                        {
-                            Console.WriteLine("Could not change drive!");
-                        }
-                        break;
                     }
                     Console.WriteLine("Command not found!");
                     break;

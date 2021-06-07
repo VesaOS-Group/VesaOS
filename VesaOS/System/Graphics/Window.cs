@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Drawing;
 using VesaOS.System.Graphics.UI;
 
@@ -37,6 +37,10 @@ namespace VesaOS.System.Graphics
             {
                 return;
             }
+        }
+        public virtual void Stop()
+        {
+
         }
     }
 }

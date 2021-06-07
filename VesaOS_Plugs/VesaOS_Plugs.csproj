@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="IL2CPU.API" Version="0.1.0-localbuild20210326073200" />
+    <PackageReference Include="IL2CPU.API" Version="0.1.0-localbuild20210524071834" />
   </ItemGroup>
 
   <ItemGroup>

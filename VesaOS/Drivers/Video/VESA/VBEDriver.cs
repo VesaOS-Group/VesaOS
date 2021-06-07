@@ -1,10 +1,11 @@
-﻿namespace VesaOS.Drivers.Video.VESA
+namespace VesaOS.Drivers.Video.VESA
 {
-    class VBEDriver : Driver
+    class VBEDriver
     {
-        public override void Init()
+        public static void Initialize()
         {
             
         }
     }
 }
+ 

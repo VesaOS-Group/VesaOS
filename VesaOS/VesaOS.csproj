@@ -34,13 +34,18 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="Core\AppSandbox\**" />
+      <EmbeddedResource Remove="Core\AppSandbox\**" />
+      <None Remove="Core\AppSandbox\**" />
+    </ItemGroup>
+
+    <ItemGroup>
         <PackageReference Include="Cosmos.Build" Version="0.1.0-localbuild20210326073200" NoWarn="NU1604">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
         <PackageReference Include="Cosmos.Debug.Kernel" Version="0.1.0-localbuild20210326073200" NoWarn="NU1604" />
         <PackageReference Include="Cosmos.System2" Version="0.1.0-localbuild20210326073200" NoWarn="NU1604" />
-        <PackageReference Include="Spruce" Version="0.1.0-localbuild" />
         <PackageReference Include="XSharp" Version="0.1.0-localbuild" />
     </ItemGroup>
 
