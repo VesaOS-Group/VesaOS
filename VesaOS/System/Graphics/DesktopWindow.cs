@@ -1,4 +1,5 @@
 ﻿using Cosmos.System.Graphics;
+
 namespace VesaOS.System.Graphics
 {
     class DesktopWindow : Window

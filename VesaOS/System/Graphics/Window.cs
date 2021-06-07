@@ -1,18 +1,24 @@
-﻿using System.Drawing;
+using System.Collections.Generic;
+using System.Drawing;
+using VesaOS.System.Graphics.UI;
 
 namespace VesaOS.System.Graphics
 {
-    abstract class Window
+    public class Window
     {
         public static Point Location;
         public static int Width;
         public static int Height;
         public static byte[] vram;
         public static bool Fullscreen = false;
-        
+        public List<UIElement> UIElements = new List<UIElement>();
+
         public virtual void Run()
         {
-
+            foreach(UIElement element in UIElements)
+            {
+                element.Draw();
+            }
         }
         public virtual void Draw()
         {

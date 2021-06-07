@@ -2,6 +2,8 @@ using Cosmos.HAL;
 using System;
 using System.IO;
 using VesaOS.System.Network.HTTP;
+using Cosmos.System.Graphics;
+using VesaOS.System.Graphics.UI;
 using VesaOS.Win32;
 
 namespace VesaOS.System.Terminal
@@ -169,6 +171,18 @@ namespace VesaOS.System.Terminal
                     if (Kernel.BootMode == 0)
                     {
                         Graphics.WindowManager.Init();
+                        Graphics.WindowManager.Init();
+                        Window window = new Window();
+                        Button button = new Button();
+                        button.Width = 100;
+                        button.Height = 50;
+                        button.Color = VGAColor.White;
+                        button.HoverColor = VGAColor.Gray;
+                        button.ClickColor = VGAColor.Blue;
+                        button.X = 5;
+                        button.Y = 5;
+                        window.UIElements.Add(button);
+                        WindowManager.ShowWindow(window);
                     }
                     else
                     {

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Cosmos.Core;
+﻿using Cosmos.Core;
 using Cosmos.System.Graphics;
 
 namespace Cosmos.HAL

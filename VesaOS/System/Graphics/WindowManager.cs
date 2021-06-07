@@ -2,6 +2,7 @@
 using Cosmos.HAL;
 using Cosmos.System;
 using Cosmos.System.Graphics;
+using VesaOS.System.Graphics.UI;
 
 namespace VesaOS.System.Graphics
 {
@@ -28,7 +29,7 @@ namespace VesaOS.System.Graphics
         {
             VGAGraphics.Clear(VGAColor.Black);
             //draw current window (windows are always fullscreen for now)
-            if (!(windows.Count == 0))
+            if (windows.Count != 0)
             {
                 windows[RunningIndex].Run();
             }
@@ -48,6 +49,7 @@ namespace VesaOS.System.Graphics
         public static void ShowWindow(Window w)
         {
             windows.Add(w);
+            RunningIndex = windows.Count - 1;
             windows[windows.Count - 1].Show();
         }
     }

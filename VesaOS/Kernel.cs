@@ -5,7 +5,8 @@ using Cosmos.HAL;
 //using Console = Cosmos.HAL.Terminal;
 using VesaOS.Drivers.VirtualPartitions;
 using VesaOS.System;
-using VesaOS.System.Users;
+using VesaOS.System.Graphics;
+using VesaOS.System.Graphics.UI;
 
 namespace VesaOS
 {
@@ -156,13 +157,13 @@ namespace VesaOS
                 Crash(e);
             }
         }
+
         protected override void Run()
         {
             try
             {
                 if (!System.Graphics.WindowManager.GraphicsMode)
                 {
-                    
                     Console.Write(Environment.CurrentDirectory + ">");
                     System.Terminal.Shell.Exec(Console.ReadLine());
                 }
