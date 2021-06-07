@@ -15,8 +15,6 @@ namespace VesaOS.System.Graphics.UI
 
             if (MouseOver)
             {
-                
-
                 if (MouseManager.MouseState != MouseState.Left) MousePreviouslyPressed = false;
             }
             else
@@ -42,7 +40,7 @@ namespace VesaOS.System.Graphics.UI
             //draw gets called before run
             if (MouseOver)
             {
-                VGAGraphics.DrawFilledRect(X, Y, Width, Height, HoverColor)
+                VGAGraphics.DrawFilledRect(X, Y, Width, Height, HoverColor);
             }
             if (MouseOver && MouseManager.MouseState == MouseState.Left && !MousePreviouslyPressed)
             {

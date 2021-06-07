@@ -28,7 +28,6 @@ namespace VesaOS.System.Graphics
         public static void Run()
         {
             VGAGraphics.Clear(VGAColor.Black);
-            //draw current window (windows are always fullscreen for now)
             foreach (var window in windows)
             {
                 window.Draw();
