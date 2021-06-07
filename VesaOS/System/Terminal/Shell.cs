@@ -5,6 +5,7 @@ using VesaOS.System.Network.HTTP;
 using Cosmos.System.Graphics;
 using VesaOS.System.Graphics.UI;
 using VesaOS.Win32;
+using VesaOS.System.Graphics;
 
 namespace VesaOS.System.Terminal
 {
@@ -170,7 +171,6 @@ namespace VesaOS.System.Terminal
                 case "gmode":
                     if (Kernel.BootMode == 0)
                     {
-                        Graphics.WindowManager.Init();
                         Graphics.WindowManager.Init();
                         Window window = new Window();
                         Button button = new Button();
