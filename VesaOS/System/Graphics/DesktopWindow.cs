@@ -9,6 +9,11 @@ namespace VesaOS.System.Graphics
             DrawWallpaper();
             DrawTaskbar();
         }
+        public override void Draw()
+        {
+            DrawWallpaper();
+            DrawTaskbar();
+        }
         public override void Show()
         {
             Fullscreen = true;

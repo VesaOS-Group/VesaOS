@@ -15,14 +15,18 @@ namespace VesaOS.System.Graphics
 
         public virtual void Run()
         {
-            foreach(UIElement element in UIElements)
+            Draw();
+            foreach (UIElement element in UIElements)
             {
-                element.Draw();
+                element.Run();
             }
         }
         public virtual void Draw()
         {
-
+            foreach (UIElement element in UIElements)
+            {
+                element.Draw();
+            }
         }
         public virtual void Show(int w, int h, Point loc)
         {

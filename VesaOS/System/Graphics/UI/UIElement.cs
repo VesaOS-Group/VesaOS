@@ -16,5 +16,9 @@ namespace VesaOS.System.Graphics.UI
         {
             
         }
+        public virtual void Run()
+        {
+
+        }
     }
 }
