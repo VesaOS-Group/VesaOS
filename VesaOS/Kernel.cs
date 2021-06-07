@@ -74,9 +74,8 @@ namespace VesaOS
                     }
                 }
                 mDebugger.Send("VesaOS is starting!");
-                Cosmos.Core.Memory.Heap.Init();
-                ProcessMemory = Cosmos.Core.Memory.Heap.Alloc(((Cosmos.Core.CPU.GetAmountOfRAM() * 1024) * 1024) / 2);
-                ProcessMemorySize = (int)(Cosmos.Core.CPU.GetAmountOfRAM() * 1024 * 1024 / 2);
+                //ProcessMemory = Cosmos.Core.Memory.Heap.Alloc(((Cosmos.Core.CPU.GetAmountOfRAM() * 1024) * 1024) / 2);
+                //ProcessMemorySize = (int)(Cosmos.Core.CPU.GetAmountOfRAM() * 1024 * 1024 / 2);
                 pidstack.Add(0);
                 Terminal.BackColor = ConsoleColor.DarkGreen;
                 Terminal.ClearSlow(ConsoleColor.DarkGreen);
@@ -228,7 +227,7 @@ namespace VesaOS
             Terminal.WriteLine(e.ToString());
             Terminal.WriteLine("\nPlease report this issue to the developers!\nhttps://github.com/TheRealEli310/VesaOS");
             int y = Terminal.CursorY;
-            Terminal.SetCursorPos(0, 59); Terminal.Write("@Vesa Systems - 2021");
+            Terminal.SetCursorPos(0, 59); Terminal.Write("@VesaOS Group - 2021");
 
             Terminal.SetCursorPos(0, y);
             Terminal.WriteLine("\nPress enter to reboot, press delete to shut down: ");

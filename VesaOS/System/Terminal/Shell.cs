@@ -1,6 +1,7 @@
 using Cosmos.HAL;
 using System;
 using System.IO;
+using VesaOS.System.Network.HTTP;
 using VesaOS.Win32;
 
 namespace VesaOS.System.Terminal
@@ -186,6 +187,9 @@ namespace VesaOS.System.Terminal
                     break;
                 case "time":
                     Console.WriteLine(RTC.Hour.ToString() + ":" + RTC.Minute.ToString());
+                    break;
+                case "wget":
+                    Console.WriteLine(HTTPClient.Get(cmd[1]));
                     break;
                 default:
                     if (Kernel.BootMode == 0 || Kernel.BootMode == 3)
