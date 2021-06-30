@@ -9,6 +9,11 @@ namespace VesaOS.System.Graphics
     class WindowManager
     {
         private static List<Window> windows = new List<Window>();
+        private static List<Window> windows1 = new List<Window>();
+        private static List<Window> windows2 = new List<Window>();
+        private static List<Window> windows3 = new List<Window>();
+        private static List<Window> windows4 = new List<Window>();
+        private static int CurrentDesktop = 1;
         private static int RunningIndex = 0;
         private static readonly byte[] CursorData = new byte[6 * 10]
         {
@@ -54,6 +59,46 @@ namespace VesaOS.System.Graphics
             windows.Add(w);
             RunningIndex = windows.Count - 1;
             windows[windows.Count - 1].Show();
+        }
+        public static void ShowDesktop(int d)
+        {
+            switch (CurrentDesktop)
+            {
+                case 1:
+                    windows1 = windows;
+                    break;
+                case 2:
+                    windows2 = windows;
+                    break;
+                case 3:
+                    windows3 = windows;
+                    break;
+                case 4:
+                    windows4 = windows;
+                    break;
+                default:
+                    windows1 = windows;
+                    break;
+            }
+            CurrentDesktop = d;
+            switch (CurrentDesktop)
+            {
+                case 1:
+                    windows = windows1;
+                    break;
+                case 2:
+                    windows = windows2;
+                    break;
+                case 3:
+                    windows = windows3;
+                    break;
+                case 4:
+                    windows = windows4;
+                    break;
+                default:
+                    windows = windows1;
+                    break;
+            }
         }
     }
 }

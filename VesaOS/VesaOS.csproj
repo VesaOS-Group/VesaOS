@@ -27,6 +27,7 @@
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
       <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+      <Optimize>true</Optimize>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
@@ -51,6 +52,10 @@
 
     <ItemGroup>
       <PlugsReference Include="$(MSBuildProjectDirectory)\..\VesaOS_Plugs\bin\Debug\netcoreapp2.0\VesaOS_Plugs.dll" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Core\Moonsharp\Interpreter\" />
     </ItemGroup>
 
 </Project>

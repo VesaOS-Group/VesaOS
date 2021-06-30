@@ -7,6 +7,9 @@ using VesaOS.Drivers.VirtualPartitions;
 using VesaOS.System;
 using VesaOS.System.Graphics;
 using VesaOS.System.Graphics.UI;
+using VesaOS.System.Users;
+using MoonSharp.Interpreter;
+using System.IO;
 
 namespace VesaOS
 {
@@ -17,9 +20,9 @@ namespace VesaOS
         public static List<int> pidstack { get; private set; }
         public static List<string> RunningServices { get; private set; }
         public static Core.Registry.IniFile config;
-        public static event KernelEvent BootFinished;
-        private static byte* ProcessMemory;
-        private static int ProcessMemorySize;
+        //public static event KernelEvent BootFinished;
+        //private static byte* ProcessMemory;
+        //private static int ProcessMemorySize;
         public static string CurrentDir = "";
         public static string CurrentVol = "0";
         public static Sys.FileSystem.CosmosVFS fs = new Sys.FileSystem.CosmosVFS();
@@ -32,13 +35,6 @@ namespace VesaOS
             {
                 VGADriverII.Initialize(VGAMode.Text90x60);
                 Console.WriteLine("Hold shift for boot options...");
-                for (int i = 0; i < 1000000; i++)
-                {
-                    if (true)
-                    {
-
-                    }
-                }
                 Console.Clear();
                 if (Sys.KeyboardManager.ShiftPressed)
                 {
@@ -119,17 +115,19 @@ namespace VesaOS
                 {
                     VesaOS.System.Network.NTPClient.Init();
                 }
-                if (BootMode == 0 || BootMode == 3)
+                if (BootMode == 0)
                 {
-                    if (!true) //config.GetBoolean("Setup", "SetupCompleted")
+                    if (!File.Exists(@"0:\config.vcf")) //config.GetBoolean("Setup", "SetupCompleted")
                     {
                         /*System.Graphics.WindowManager.Init();
                         System.Graphics.Window OOBE = new Apps.VesaOOBE();
                         System.Graphics.WindowManager.ShowWindow(OOBE);
                         while (true) { System.Graphics.WindowManager.Run(); }*/
+                        pidstack.Add(2);
                         Terminal.BackColor = ConsoleColor.Black;
                         Terminal.ClearSlow(ConsoleColor.Black);
                         Apps.VesaOOBEText.UserAccountSetup();
+                        File.Create(@"0:\config.vcf");
                     }
                 }
                 mDebugger.Send("Initializing shell...");
@@ -140,17 +138,21 @@ namespace VesaOS
                 pidstack.Add(1);
                 Terminal.BackColor = ConsoleColor.Black;
                 Terminal.ClearSlow(ConsoleColor.Black);
-                /*Console.Write("Username: ");
-                string un = Console.ReadLine();
-                Console.Write("Password: ");
-                string psk = Console.ReadLine();
-                while (!UserProfileSystem.Login(un,psk))
+                if (BootMode == 0)
                 {
                     Console.Write("Username: ");
-                    un = Console.ReadLine();
+                    string un = Console.ReadLine();
                     Console.Write("Password: ");
-                    psk = Console.ReadLine();
-                }*/
+                    string psk = Console.ReadLine();
+                    while (!UserProfileSystem.Login(un, psk))
+                    {
+                        Console.Write("Username: ");
+                        un = Console.ReadLine();
+                        Console.Write("Password: ");
+                        psk = Console.ReadLine();
+                    }
+
+                }
             }
             catch (Exception e)
             {
@@ -246,26 +248,41 @@ namespace VesaOS
         public static void Reboot()
         {
             //Free the ProcessMemory
-            Cosmos.Core.Memory.Heap.Free(ProcessMemory);
+            //Cosmos.Core.Memory.Heap.Free(ProcessMemory);
             //Reset CPU
             Sys.Power.Reboot();
         }
         public static void Shutdown()
         {
             //Free the ProcessMemory
-            Cosmos.Core.Memory.Heap.Free(ProcessMemory);
+            //Cosmos.Core.Memory.Heap.Free(ProcessMemory);
             //Shutdown with ACPI
             Sys.Power.Shutdown();
         }
-        public static void RunProgram()
+        public static void RunProgram(string filename, ProgramType type)
         {
-
+            switch (type)
+            {
+                case ProgramType.WindmillStandard:
+                    break;
+                case ProgramType.WindmillVesaOS:
+                    break;
+                case ProgramType.DotNet:
+                    break;
+                case ProgramType.Lua:
+                    //Script.RunString(File.ReadAllText(GetFullPath(filename)));
+                    Console.WriteLine("Lua is disabled!")
+                    break;
+                default:
+                    break;
+            }
         }
     }
-    enum ProgramType
+    public enum ProgramType
     {
         WindmillStandard = 0,
         WindmillVesaOS = 1,
         DotNet = 2,
+        Lua = 3,
     }
 }

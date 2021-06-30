@@ -12,6 +12,17 @@ namespace VesaOS.System.Terminal
     class Shell
     {
         public static Network.NTPClient nTP = new Network.NTPClient();
+        private static void DiskPart(string[] cmd)
+        {
+            switch (cmd[1].ToLower())
+            {
+                case "format":
+
+                default:
+                    Console.WriteLine("diskpart: Invalid command.");
+                    break;
+            }
+        }
         public static void Exec(string cmdline)
         {
             string[] cmd = cmdline.Split(" ");
@@ -146,6 +157,11 @@ namespace VesaOS.System.Terminal
                     break;
                 #endregion
                 case "format":
+                    if (Users.UserProfileSystem.CurrentPermLevel == Users.UserPermLevel.Guest)
+                    {
+                        Console.WriteLine("You do not have permission to do this!");
+                        break;
+                    }
                     if (Kernel.BootMode == 0 || Kernel.BootMode == 3)
                     {
                         try
@@ -204,6 +220,17 @@ namespace VesaOS.System.Terminal
                     break;
                 case "wget":
                     Console.WriteLine(HTTPClient.Get(cmd[1]));
+                    break;
+                case "diskpart":
+                    DiskPart(cmd);
+                    break;
+                case "currentuser":
+                case "whoami":
+                case "cu":
+                    Console.WriteLine(Users.UserProfileSystem.CurrentUser);
+                    break;
+                case "lua":
+                    Kernel.RunProgram(cmd[1],ProgramType.Lua);
                     break;
                 default:
                     if (Kernel.BootMode == 0 || Kernel.BootMode == 3)

@@ -1,4 +1,5 @@
-﻿namespace VesaOS.System.Users
+﻿using System.IO;
+namespace VesaOS.System.Users
 {
     public class UserProfileSystem
     {
@@ -6,11 +7,11 @@
         public static UserPermLevel CurrentPermLevel { get; private set; }
         public static bool UserExists(string un)
         {
-            return Kernel.config.dictionary.ContainsKey("[Users]"+un);
+            return File.Exists(@"0:\Users\"+un+@"\VUSERC");
         }
         public static bool CheckPassword(string un,string psk)
         {
-            return Kernel.config.GetValue("Users",un) == psk;
+            return File.ReadAllLines(@"0:\Users\" + un + @"\VUSERC")[0] == psk;
         }
         public static bool Login(string un, string psk)
         {
@@ -19,7 +20,7 @@
                 if (CheckPassword(un, psk))
                 {
                     CurrentUser = un;
-                    CurrentPermLevel = (UserPermLevel)Kernel.config.GetInteger("UserPerms",un,1);
+                    CurrentPermLevel = (UserPermLevel)int.Parse(File.ReadAllLines(@"0:\Users\" + un + @"\VUSERC")[1]);
                     return true;
                 }
             }
@@ -27,8 +28,12 @@
         }
         public static void CreateUser(string un, string psk)
         {
-            Kernel.config.SetValue("Users", un, psk);
-            Kernel.config.SetValue("UserPerms", un, "2");
+            if (!Directory.Exists(@"0:\Users"))
+            {
+                Directory.CreateDirectory(@"0:\Users");
+            }
+            Directory.CreateDirectory(@"0:\Users\"+un);
+            File.WriteAllLines(@"0:\Users\" + un + @"\VUSERC",new string[]{ psk, "2" });
         }
     }
     public enum UserPermLevel
