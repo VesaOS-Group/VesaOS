@@ -271,7 +271,7 @@ namespace VesaOS
                     break;
                 case ProgramType.Lua:
                     //Script.RunString(File.ReadAllText(GetFullPath(filename)));
-                    Console.WriteLine("Lua is disabled!")
+                    Console.WriteLine("Lua is disabled!");
                     break;
                 default:
                     break;
