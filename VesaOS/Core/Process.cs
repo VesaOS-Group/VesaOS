@@ -6,8 +6,9 @@ namespace VesaOS.Core
 {
     public class Process
     {
-        public static string progcode = String.Empty;
-        public static int progid;
+        public int ProgramID;
+        public ProgramType PType;
+        public List<Process> ChildProcesses;
 
     }
 }

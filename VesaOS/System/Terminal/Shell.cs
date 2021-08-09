@@ -11,6 +11,7 @@ namespace VesaOS.System.Terminal
 {
     class Shell
     {
+        public static Core.Process ShellProcess = new Core.Process();
         public static Network.NTPClient nTP = new Network.NTPClient();
         private static void DiskPart(string[] cmd)
         {
@@ -122,6 +123,7 @@ namespace VesaOS.System.Terminal
                     Console.WriteLine(fileapi.ReadFile(fileapi.GetDirectory() + cmd[1]));
                     break;
                 case "cd":
+                    // todo: make this not stupid
                     #region messy code here
                     if (cmd[1] == "..")
                     {
@@ -188,7 +190,7 @@ namespace VesaOS.System.Terminal
                     if (Kernel.BootMode == 0)
                     {
                         Graphics.WindowManager.Init();
-                        Window window = new Window();
+                        /*Window window = new Window();
                         Button button = new Button();
                         button.Width = 100;
                         button.Height = 50;
@@ -198,7 +200,7 @@ namespace VesaOS.System.Terminal
                         button.X = 5;
                         button.Y = 5;
                         window.UIElements.Add(button);
-                        WindowManager.ShowWindow(window);
+                        WindowManager.ShowWindow(window);*/
                     }
                     else
                     {
@@ -219,6 +221,7 @@ namespace VesaOS.System.Terminal
                     Console.WriteLine(RTC.Hour.ToString() + ":" + RTC.Minute.ToString());
                     break;
                 case "wget":
+                    // why does networking throw a cpu exception
                     Console.WriteLine(HTTPClient.Get(cmd[1]));
                     break;
                 case "diskpart":
@@ -228,6 +231,15 @@ namespace VesaOS.System.Terminal
                 case "whoami":
                 case "cu":
                     Console.WriteLine(Users.UserProfileSystem.CurrentUser);
+                    break;
+                case "edit":
+                case "miv":
+                    /*if (cmd.Length == 1)
+                    {
+                        Apps.MIV.miv(null);
+                        break;
+                    }
+                    File.WriteAllText(Kernel.GetFullPath(cmd[1]),Apps.MIV.miv(File.ReadAllText(Kernel.GetFullPath(cmd[1]))));*/
                     break;
                 case "lua":
                     Kernel.RunProgram(cmd[1],ProgramType.Lua);

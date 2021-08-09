@@ -100,5 +100,8 @@ namespace VesaOS.System.Graphics
                     break;
             }
         }
+        public static void ResetGraphicsModeFlag() {
+            GraphicsMode = false;
+        }
     }
 }

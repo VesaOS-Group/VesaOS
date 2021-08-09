@@ -5,19 +5,17 @@ using Cosmos.HAL;
 //using Console = Cosmos.HAL.Terminal;
 using VesaOS.Drivers.VirtualPartitions;
 using VesaOS.System;
-using VesaOS.System.Graphics;
-using VesaOS.System.Graphics.UI;
 using VesaOS.System.Users;
-using MoonSharp.Interpreter;
 using System.IO;
+using VesaOS.Core;
+using Cosmos.HAL.Network;
 
 namespace VesaOS
 {
     public delegate void KernelEvent();
-    
+
     public unsafe class Kernel : Sys.Kernel
     {
-        public static List<int> pidstack { get; private set; }
         public static List<string> RunningServices { get; private set; }
         public static Core.Registry.IniFile config;
         //public static event KernelEvent BootFinished;
@@ -26,9 +24,8 @@ namespace VesaOS
         public static string CurrentDir = "";
         public static string CurrentVol = "0";
         public static Sys.FileSystem.CosmosVFS fs = new Sys.FileSystem.CosmosVFS();
-        public static VirtualPartition ramdisk;
         public static int BootMode = 0;
-
+        public static Core.Process KernelProcess { get; private set; } = new Process();
         protected override void BeforeRun()
         {
             try
@@ -71,9 +68,10 @@ namespace VesaOS
                     }
                 }
                 mDebugger.Send("VesaOS is starting!");
+                mDebugger.Send("Initializing kernel process...");
+                KernelProcess.PType = ProgramType.Kernel;
                 //ProcessMemory = Cosmos.Core.Memory.Heap.Alloc(((Cosmos.Core.CPU.GetAmountOfRAM() * 1024) * 1024) / 2);
                 //ProcessMemorySize = (int)(Cosmos.Core.CPU.GetAmountOfRAM() * 1024 * 1024 / 2);
-                pidstack.Add(0);
                 Terminal.BackColor = ConsoleColor.DarkGreen;
                 Terminal.ClearSlow(ConsoleColor.DarkGreen);
                 Terminal.SetCursorPos(39,30);
@@ -109,6 +107,7 @@ namespace VesaOS
                     {
                         mDebugger.Send("Initializing network...");
                         VesaOS.System.Network.NTPClient.Init();
+                        NetworkInit.Init();
                     }
                 }
                 if (BootMode == 2)
@@ -123,7 +122,6 @@ namespace VesaOS
                         System.Graphics.Window OOBE = new Apps.VesaOOBE();
                         System.Graphics.WindowManager.ShowWindow(OOBE);
                         while (true) { System.Graphics.WindowManager.Run(); }*/
-                        pidstack.Add(2);
                         Terminal.BackColor = ConsoleColor.Black;
                         Terminal.ClearSlow(ConsoleColor.Black);
                         Apps.VesaOOBEText.UserAccountSetup();
@@ -135,7 +133,6 @@ namespace VesaOS
                 //Console.WriteLine("Starting services...");
                 //StartService("ukms");
                 //Console.WriteLine("Boot finished.");
-                pidstack.Add(1);
                 Terminal.BackColor = ConsoleColor.Black;
                 Terminal.ClearSlow(ConsoleColor.Black);
                 if (BootMode == 0)
@@ -153,6 +150,10 @@ namespace VesaOS
                     }
 
                 }
+                // Setup shell process
+                System.Terminal.Shell.ShellProcess.PType = ProgramType.Kernel;
+                // Register shell process
+                RunProgram(System.Terminal.Shell.ShellProcess);
             }
             catch (Exception e)
             {
@@ -277,6 +278,57 @@ namespace VesaOS
                     break;
             }
         }
+        public static void RunProgram(Core.Process process)
+        {
+
+            switch (process.PType)
+            {
+                case ProgramType.WindmillStandard:
+                    // Unmodified Windmill
+                    RegisterProcess(process);
+                    break;
+                case ProgramType.WindmillVesaOS:
+                    // VesaOS modified Windmill
+                    RegisterProcess(process);
+                    break;
+                case ProgramType.DotNet:
+                    // DotNetParser
+                    RegisterProcess(process);
+                    break;
+                case ProgramType.Lua:
+                    //Script.RunString(File.ReadAllText(GetFullPath(filename)));
+                    Console.WriteLine("Lua is disabled!");
+                    break;
+                case ProgramType.Kernel:
+                    // this is a part of the kernel code
+                    RegisterProcess(process);
+                    break;
+                default:
+                    break;
+            }
+        }
+        public static void RegisterProcess(Process process)
+        {
+            KernelProcess = RegisterProcess(KernelProcess,process);
+        }
+        private static Process RegisterProcess(Process parent, Process process)
+        {
+            
+            parent.ChildProcesses.Add(process);
+            return parent;
+        }
+        public static void KillProcess(Process process)
+        { 
+
+        }
+        public static Process GetProcessByPID(int pid)
+        {
+            foreach (var process in KernelProcess.ChildProcesses)
+            {
+
+            }
+            return null;
+        }
     }
     public enum ProgramType
     {
@@ -284,5 +336,6 @@ namespace VesaOS
         WindmillVesaOS = 1,
         DotNet = 2,
         Lua = 3,
+        Kernel = 4,
     }
 }

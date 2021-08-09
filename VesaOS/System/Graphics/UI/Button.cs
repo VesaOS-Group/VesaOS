@@ -8,6 +8,9 @@ namespace VesaOS.System.Graphics.UI
     {
         private bool MousePreviouslyPressed = false;
         private bool MouseOver = false;
+        public string Text = "";
+        public VGAColor TextColor = VGAColor.White;
+        public VGAFont TextSize = VGAFont.Font3x5;
         public override void Draw()
         {
             //called by window
@@ -21,6 +24,7 @@ namespace VesaOS.System.Graphics.UI
             {
                 VGAGraphics.DrawFilledRect(X, Y, Width, Height, Color);
             }
+            VGAGraphics.DrawString(X/2,Y/2,Text,TextColor,TextSize);
         }
 
         private bool Intersect(int x, int y)
