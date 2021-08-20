@@ -47,15 +47,15 @@ namespace VesaOS
                         ConsoleKeyInfo kcki = Console.ReadKey();
                         string k = kcki.KeyChar.ToString();
                         switch(k) {
-                            case 1:
+                            case "1":
                                 break;
-                            case 2:
+                            case "2":
                                 BootMode = 1;
                                 break;
-                            case 3:
+                            case "3":
                                 BootMode = 2;
                                 break;
-                            case 4:
+                            case "4":
                                 BootMode = 3;
                                 break;
                         }
