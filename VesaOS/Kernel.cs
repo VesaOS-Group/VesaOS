@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Sys = Cosmos.System;
 using Cosmos.HAL;
@@ -46,25 +46,7 @@ namespace VesaOS
                         Console.Write("Select one: ");
                         ConsoleKeyInfo kcki = Console.ReadKey();
                         string k = kcki.KeyChar.ToString();
-                        if (k == "1")
-                        {
-                            break;
-                        }
-                        if (k == "2")
-                        {
-                            BootMode = 1;
-                            break;
-                        }
-                        if (k == "3")
-                        {
-                            BootMode = 2;
-                            break;
-                        }
-                        if (k == "4")
-                        {
-                            BootMode = 3;
-                            break;
-                        }
+                        BootMode = Convert.ToInt32(k) - 1;
                     }
                 }
                 mDebugger.Send("VesaOS is starting!");
